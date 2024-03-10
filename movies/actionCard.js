@@ -12,7 +12,7 @@ function CardImg({image}) {
     )
     
  }
-export default function CardsImage({images}) {
+export default function ImagesCards({navigation, imagesCard}) {
     
     
 
@@ -38,15 +38,19 @@ export default function CardsImage({images}) {
         }
     ]
     return(
+        
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style= {{marginTop: 22}}>
         {
-         images.map((item,index)=>{
+         imagesCard.map((item,index)=>{
               return(
+              <TouchableOpacity onPress={()=>navigation.navigate('action', item)}>
                   <CardImg key={index} image={item.backdrop_path} />
+              </TouchableOpacity>
               )
           })
         }
       </ScrollView>
+      
     )
     
 }

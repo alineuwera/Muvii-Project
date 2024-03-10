@@ -15,6 +15,8 @@ const image = require("../images/logo.jpg");
 
 export default function Home({navigation}) {
     const [movies, setMovies] = useState([])
+    const [upcoming, setUpcoming] = useState([])
+    const [top, topMovies] = useState([])
     const options = {
         method: 'GET',
         headers: {
@@ -24,7 +26,7 @@ export default function Home({navigation}) {
       };
       
 
-// const fetchMovies = () =>  {
+const fetchMovies = () =>  {
     fetch('https://api.themoviedb.org/3/movie/popular?language=en-US?api_key=bd319aeafe7df79aa5c577dfc5d7ac15', options)
   .then((response)=> response.json())
     .then(response => setMovies(response.results))
@@ -32,9 +34,24 @@ export default function Home({navigation}) {
 
     console.log(movies);
 
-// }
-
       
+      fetch('https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1', options)
+        .then(response => response.json())
+        .then(response => setUpcoming(response.results))
+        .catch(err => console.error(err));
+
+
+          
+          fetch('https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1', options)
+            .then(response => response.json())
+            .then(response => topMovies(response.results))
+            .catch(err => console.error(err));
+
+ }
+
+   useEffect(()=>{
+    fetchMovies()
+   },[])   
      
 
     return(
@@ -51,26 +68,36 @@ export default function Home({navigation}) {
         <Cards />
        </View>
        </View>
+
+      
        <View style= {{padding:11}}>
         <CardButton/>
        </View>
+       
+        {/* fetch images */}
        <ScrollView>
         <View style= {{padding:11}}>
             <Text style= {{color: "white", fontWeight: "bold", fontSize: 20}}>New Release</Text>
         </View>
         <View style= {{padding:11}}>
-            <CardsImage images={movies}/>
-           
+            <CardsImage images={movies}/>   
         </View>
+
+
         <View style= {{padding:11}}>
             <Text style= {{color: "white", fontWeight: "bold", fontSize: 20}}>Made for you</Text>
         </View>
+        
         <View style= {{padding:11}}>
-            <MadeForYou/>
-           
+            <CardsImage images={upcoming}/>
         </View>
 
-        
+        <View style= {{padding:11}}>
+            <Text style= {{color: "white", fontWeight: "bold", fontSize: 20}}>Top Movies</Text>
+        </View>
+           <View>
+           <CardsImage images={top}/>
+           </View>
         </ScrollView>
         <StatusBar style="light" />
         </View>

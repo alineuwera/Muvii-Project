@@ -20,7 +20,7 @@ export default function Downloaded({navigation}) {
           <View style= {{display: "flex", flexDirection: "row", marginTop: 20, marginLeft: 18}}>
           <Image source={require("../images/dow1.jpg")} style= {{width:185,height: 100}}/>
           <View style= {{display: "flex", flexDirection: "column", marginLeft: 10}}>
-          <Text style= {{color: "white"}}>Frozen 2</Text>
+          <Text style= {{color: "white"}}></Text>
           <Text style= {{color: "white", fontWeight: 300}}>2020</Text>
           <Text style= {{color: "white", fontWeight: 100}}>Drama, Kid, Family</Text>
           </View>
