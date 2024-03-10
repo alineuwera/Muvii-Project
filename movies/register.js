@@ -3,14 +3,87 @@ import { StyleSheet, Text, View ,Image, ImageBackground, Button, Pressable, Touc
 import { TextInput } from 'react-native-paper';
 const image = require("../images/logo.jpg");
 import Ionicons from "react-native-vector-icons/Ionicons";
-import AntDesign from "react-native-vector-icons/AntDesign"
+import AntDesign from "react-native-vector-icons/AntDesign";
+import { FIREBASE_APP } from '../firebaseConfiguration';
+import { FIREBASE_AUTH } from '../firebaseConfiguration';
+import { useState } from 'react';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 const height = Dimensions.get("screen").height;
 const width = Dimensions.get("screen").width
 export default function Registers({navigation}) {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(true);
+  
+  const isValidEmail = (email) => {
+    // Basic email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validForm = () => {
+    let valid = true;
+    if (!email.trim()) {
+      setEmailError('email is required');
+      valid = false;
+
+    } else if (!isValidEmail(email)) {
+      setEmailError('email is invalid');
+      valid = false;
+    } else {
+      setEmailError('');
+    }
+
+    if (!password.trim()) {
+      setPasswordError('password is required');
+      valid = false
+    } else {
+      setPasswordError('');
+    } 
+    if(password !== confirmPassword){
+      setConfirmPasswordError("password doesn't match");
+      valid = false;
+    }else{
+      setConfirmPasswordError('');
+    }return valid
+  }
+
+  
+  //set data in local storage and checking the if the the validation form funciton is valid in order to be excuted
+const auth=FIREBASE_AUTH;
+  const handleSubmit = async() => {
+    if (validForm() === true) {
+      navigation.navigate("sign")
+      // const data = {
+      //   email: email,
+      //   password: password
+      // }
+      //  await AsyncStorage.setItem('key_vaue', JSON.stringify(data))
+      try {
+        const response = await createUserWithEmailAndPassword(auth, email, password);
+        console.log(response);
+        console.log('created user successfully');
+        
+      } catch (error) {
+        console.log(error);
+        
+      }finally{
+        navigation.navigate('sign');
+      }
+    }
+  }
+
+
+
     return(
         <View style= {{width: "100%", height: height, backgroundColor: "#26282c", padding: "3%"}}>
         <View style= {{ marginTop: "6%", display: "flex", flexDirection: "row"}}>
-            <Ionicons name='arrow-back' style= {{fontSize: 22, color: "#FDD130", paddingTop: "1.5%"}}></Ionicons>
+            <Ionicons onPress={()=>navigation.navigate("sign")} name='arrow-back' style= {{fontSize: 22, color: "#FDD130", paddingTop: "1.5%"}}></Ionicons>
             <Text style= {{color: "white", marginLeft: "2%", fontWeight: "600",fontSize: 20}}>Register</Text>
         </View>
         <View>
@@ -19,23 +92,41 @@ export default function Registers({navigation}) {
         </View>
         <TextInput
         mode=''
+        textColor='white'
+        theme={{ colors: { primary: "#FDD130" } }}
         label={"Email Addres"}
+        onChangeText={(e) => { setEmail(e) }}
         right= {<TextInput.Icon icon="email-outline" color={"#FDD130"}/>}
-        style= {{backgroundColor: "transparent", width: "95%",alignSelf: "center"}}>
-        </TextInput>
-        <TextInput
+        style= {{backgroundColor: "transparent", width: "95%",alignSelf: "center"}}
+        />
+         {emailError ? <Text style={{color: 'red', paddingTop: 2}}>{emailError }</Text>: null }
+         <TextInput
         mode=''
+        secureTextEntry={passwordVisible}
+        theme={{ colors: { primary: "#FDD130" } }}
+        textColor='white'
         label={"Password"}
-        right= {<TextInput.Icon icon="lock-outline" color={"#FDD130"}/>}
-        style= {{backgroundColor: "transparent", width: "95%",alignSelf: "center", }}>
-        </TextInput>
+        value={password}
+        onChangeText={(p) => { setPassword(p) }}
+        right={<TextInput.Icon icon={passwordVisible? 'eye-outline' : 'eye-off-outline'} color={"#FDD130"} onPress={()=>setPasswordVisible(!passwordVisible)}/>}
+        
+        style={{ backgroundColor: "transparent", width: "95%", alignSelf: "center", }}
+      />
+        {passwordError? <Text style={{color: 'red', paddingTop: 2}}>{passwordError }</Text>: null }
         <TextInput
         mode=''
-        label={"Confirm Password"}
-        right= {<TextInput.Icon icon="lock-outline" color={"#FDD130"}/>}
-        style= {{backgroundColor: "transparent", width: "95%",alignSelf: "center"}}>
-        </TextInput>
-        <TouchableOpacity onPress={()=>navigation.navigate("sign")} style= {{backgroundColor: "#FDD130", padding: 12, borderRadius: 3, alignSelf: "center", width: "95%", marginTop: "7%"}}>
+        secureTextEntry={passwordVisible}
+        theme={{ colors: { primary: "#FDD130" } }}
+        textColor='white'
+        label={"Password"}
+        value={confirmPassword}
+        onChangeText={(cp) => { setConfirmPassword(cp) }}
+        right={<TextInput.Icon icon={passwordVisible? 'eye-outline' : 'eye-off-outline'} color={"#FDD130"} onPress={()=>setPasswordVisible(!passwordVisible)}/>}
+        
+        style={{ backgroundColor: "transparent", width: "95%", alignSelf: "center", }}
+      />
+        {confirmPasswordError ? <Text style={{color: 'red', paddingTop: 2}}>{confirmPasswordError }</Text>: null }
+        <TouchableOpacity onPress={()=>handleSubmit()} style= {{backgroundColor: "#FDD130", padding: 12, borderRadius: 3, alignSelf: "center", width: "95%", marginTop: "7%"}}>
         <Text style= {{textAlign: "center"}}>Sign Up</Text>
       </TouchableOpacity>
       <View style={{display: "flex", flexDirection: "row", width: "95%", alignSelf: "center", marginTop: "3%"}}>
