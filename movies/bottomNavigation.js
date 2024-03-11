@@ -1,4 +1,5 @@
 import * as React from 'react';
+import drawerNavigation from './drawerNavigation';
 
 //screen
 
@@ -47,7 +48,7 @@ export default function MyButtonBottom(){
                  tabBarIcon: ({focused})=>
                  <Feather name='folder' size={25} color={focused? "#FDD130":"lightgray"}/>
                 }}/>
-                <Tab.Screen name='Profile' component={ChangeProfile} options={{headerShown:false,
+                <Tab.Screen name='Profile' component={drawerNavigation} options={{headerShown:false,
                 tabBarIcon: ({focused})=>
                 <AntDesign name='appstore-o' size={25} color={focused? "#FDD130":"lightgray"}></AntDesign>
                 }} />
