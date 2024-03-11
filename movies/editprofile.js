@@ -9,18 +9,14 @@ import React, { useContext } from 'react';
 import { changeIntoMode } from './themeModel';
 
 
-
-
 export default function ChangeProfile({navigation}) {
     const {mode,changeMode}=useContext(changeIntoMode)
     return(
         <View  style= {{width: "100%", height: "100%", backgroundColor: mode?"black":"white"}}>
             <View style= {{ display: "flex", flexDirection: "row", backgroundColor: "#1f2123"}}>
-            <Ionicons onPress={()=>navigation.navigate("Home")} name='arrow-back' style= {{fontSize: 22, color: "#FDD130", marginTop:40,paddingLeft:10}}></Ionicons>
-            <Text style= {{color: "white", marginLeft: "2%", fontWeight: "bold",fontSize: 18,marginTop:40, paddingBottom: 12}}>Edit Profile</Text>
-            <TouchableOpacity onPress={()=>{changeMode()}} style={{}}>
-                <Text style={{color: "white",fontWeight: "bold",fontSize: 18,marginTop:40,  marginLeft:"49%",backgroundColor: "#FDD130", marginBottom:10, borderRadius:10,display:"flex", alignSelf:"center",padding:3}}>darkmode</Text>
-            </TouchableOpacity>
+            <Ionicons onPress={()=>navigation.navigate("Home")} name='arrow-back' style= {{fontSize: 22, color: "#FDD130", marginTop:30,paddingLeft:10}}></Ionicons>
+            <Text style= {{color: "white", marginLeft: "2%", fontWeight: "bold",fontSize: 18,marginTop:30, paddingBottom: 12}}>Edit Profile</Text>
+            <Feather onPress={()=>{changeMode()}} name='moon' style={{fontSize:30,marginLeft:"50%", marginTop:"5%", color:"white"}}></Feather>
         </View>
         <View>
             <Image source={require('../images/aline.jpeg')} style= {{width: 90, height:90, borderRadius: 80,display: "flex", justifyContent: "center", alignSelf: "center",marginTop: 25}}/>
